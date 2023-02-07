@@ -24,7 +24,7 @@
 
 // getInstruction("mashedPotatoes", 4, (step5) => {
 //   document.querySelector("#mashedPotatoes").innerHTML += `<li>${step5}</li>`;
-  // document.querySelector("#mashedPotatoesImg").removeAttribute("hidden");
+// document.querySelector("#mashedPotatoesImg").removeAttribute("hidden");
 // }, (error) => console.log(error));
 
 
@@ -118,7 +118,7 @@ async function makeBroccoli() {
     document.querySelector('#broccoli').innerHTML += '<li>Broccoli is ready!</li>'
     document.querySelector('#broccoliImg').removeAttribute("hidden");
 
-    
+
   } catch (error) {
     console.log(error)
   }
@@ -129,7 +129,9 @@ makeBroccoli()
 
 // Bonus 2 - Promise all
 
-const instructionForBrusselSrouts =[
+const brusselList = document.getElementById('brusselsSprouts')
+
+const arrayOfPromises = [
   obtainInstruction('brusselsSprouts', 0),
   obtainInstruction('brusselsSprouts', 1),
   obtainInstruction('brusselsSprouts', 2),
@@ -137,21 +139,30 @@ const instructionForBrusselSrouts =[
   obtainInstruction('brusselsSprouts', 4),
   obtainInstruction('brusselsSprouts', 5),
   obtainInstruction('brusselsSprouts', 6),
-  obtainInstruction('brusselsSprouts', 7)
+  obtainInstruction('brusselsSprouts', 7),
 ]
 
-Promise.all(instructionForBrusselSrouts).then((result) => {
-  // console.log(result[0])
-  document.querySelector('#brusselsSprouts').innerHTML += `<li>${result[0]}</li>`
-  document.querySelector('#brusselsSprouts').innerHTML += `<li>${result[1]}</li>`
-  document.querySelector('#brusselsSprouts').innerHTML += `<li>${result[2]}</li>`
-  document.querySelector('#brusselsSprouts').innerHTML += `<li>${result[3]}</li>`
-  document.querySelector('#brusselsSprouts').innerHTML += `<li>${result[4]}</li>`
-  document.querySelector('#brusselsSprouts').innerHTML += `<li>${result[5]}</li>`
-  document.querySelector('#brusselsSprouts').innerHTML += `<li>${result[6]}</li>`
-  document.querySelector('#brusselsSprouts').innerHTML += `<li>${result[7]}</li>`
-  document.querySelector('#brusselsSprouts').innerHTML += `<li>Brussels sprouts are ready!</li>`
-  document.querySelector('#brusselsSproutsImg').removeAttribute("hidden");
-})
-
-
+Promise.all(
+  brusselsSprouts.map((el, i) => {
+    return obtainInstruction('brusselsSprouts', i + 1)
+  })
+)
+  .then((arrayOfMessages) => {
+    console.log(arrayOfMessages)
+    arrayOfMessages.forEach((message) => {
+      const li = document.createElement('li')
+      li.textContent = message
+      brusselList.append(li)
+    })
+  })
+  .catch((error) => {
+    console.log(error)
+    const li = document.createElement('li')
+    li.textContent = 'We have an errror!'
+    brusselList.append(li)
+  })
+  .finally(() => {
+    const li = document.createElement('li')
+    li.textContent = 'Brussels are ready!'
+    brusselList.append(li)
+  })
